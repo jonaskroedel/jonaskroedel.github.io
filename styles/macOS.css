@@ -7,13 +7,12 @@ body, html {
     background-size: cover;
     overflow: hidden;
 }
-
 #terminal-container {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 80%;
+    width: 90%;
     height: 90%;
     background: #1e1e1e;
     border-radius: 8px;
@@ -24,68 +23,57 @@ body, html {
     flex-direction: column;
     resize: both;
 }
-
-@media screen and (min-width: 800px) and (min-height: 600px) {
+@media screen and (min-width: 800px) {
     #terminal-container {
         min-width: 500px;
-        max-width: 750px;
+        max-width: 800px;
         min-height: 300px;
         max-height: 600px;
     }
-
     .window-controls:hover {
         background: rgba(255, 255, 255, 0.1);
     }
 }
-
 .window-controls {
     display: flex;
     align-items: center;
     padding: 8px;
     background: transparent;
-    cursor: grab; /* Indicates that you can drag the window */
+    cursor: grab;
+    /* Indicates that you can drag the window */
 }
-
 .control {
     width: 12px;
     height: 12px;
     border-radius: 50%;
     margin-right: 8px;
 }
-
 .control.close {
     background-color: #ff605c;
 }
-
 .control.minimize {
     background-color: #ffbd44;
 }
-
 .control.maximize {
     background-color: #00ca56;
 }
-
 .terminal-title {
     color: #fff;
     font-size: 12px;
     margin-left: 8px;
     flex-grow: 1;
 }
-
 #terminal {
     flex-grow: 1;
-    padding: 20px;
+    padding: 10px 20px;
     color: #fff;
     font-size: 14px;
     overflow-y: auto;
     overflow-x: hidden;
-}
-
-#terminal {
     -ms-overflow-style: none;
     scrollbar-width: none;
+    min-width: 0;
 }
-
 #terminal-input {
     background: transparent;
     border: none;
@@ -96,58 +84,85 @@ body, html {
     flex-grow: 1;
     font-family: inherit;
     font-size: inherit;
-    box-sizing: border-box; /* Include padding and border in the element's dimensions */
-    white-space: nowrap; /* Prevent wrapping inside input */
+    box-sizing: border-box;
+    /* Include padding and border in the element's dimensions */
+    white-space: nowrap;
+    /* Prevent wrapping inside input */
 }
-
 /* Remove resize icon from bottom right */
 #terminal-container::-webkit-resizer {
     display: none;
 }
-
 #terminal-container {
     -moz-resize: both;
     resize: both;
 }
-
 #terminal::-webkit-scrollbar {
-    width: 12px; /* Width of the scrollbar */
+    width: 12px;
+    /* Width of the scrollbar */
 }
-
 #terminal::-webkit-scrollbar-track {
-    background: #2e2e2e; /* Color of the scrollbar track */
+    background: #2e2e2e;
+    /* Color of the scrollbar track */
 }
-
 #terminal::-webkit-scrollbar-thumb {
-    background-color: #555; /* Color of the scrollbar thumb */
-    border-radius: 10px; /* Roundness of the scrollbar thumb */
-    border: 3px solid #2e2e2e; /* Creates padding around the scrollbar thumb */
+    background-color: #555;
+    /* Color of the scrollbar thumb */
+    border-radius: 10px;
+    /* Roundness of the scrollbar thumb */
+    border: 3px solid #2e2e2e;
+    /* Creates padding around the scrollbar thumb */
 }
-
 .command-line {
     display: flex;
     align-items: center;
-    white-space: pre; /* Preserve whitespace for inline elements */
+    white-space: pre;
+    /* Preserve whitespace for inline elements */
 }
-
 /* Style for the command line prefix */
 .command-prefix {
     color: #fff;
-    margin-right: 4px; /* Adjust as needed to match your design */
+    /* Adjust as needed to match your design */
 }
-
 /* Style for smaller screens (phones) */
-@media screen and (max-width: 800px) or (max-height: 600px) {
+@media screen and (max-width: 800px) {
     #terminal-container {
-        width: 70%;
+        width: 90%;
         height: 40%;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        position: fixed; /* Or 'absolute' depending on your layout */
+        top: 30%;
+        left: 5%;
+        transform: none;
+        position: fixed;
     }
-
+    #terminal {
+        padding: 10px 20px;
+    }
     .window-controls {
-        cursor: default; /* Disable the dragging cursor */
+        cursor: default;
+        /* Disable the dragging cursor */
+    }
+    .desktop-only {
+        display: none;
+        /* Hide desktop-only elements */
+    }
+    /* Adjust any other elements as needed for mobile layout */
+}
+@media screen and (max-width: 400px) {
+    #terminal-container {
+        width: 90%;
+        height: 40%;
+        top: 30%;
+        left: 5%;
+        transform: none;
+        position: fixed;
+        display: flex;
+        align-items: flex-start; /* Align children to the start of the cross axis */
+        padding: 0;
+        margin: 0;
+    }
+    .command-line {
+        padding: 0;
+        margin: 0; /* Reset any default margins */
+        flex-direction: column;
     }
 }

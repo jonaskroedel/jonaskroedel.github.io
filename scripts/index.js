@@ -1,3 +1,5 @@
+import commands from './commands.js';
+
 // Helper function to make an element draggable
 function makeDraggable(element, handle) {
     var posX = 0, posY = 0, posX2 = 0, posY2 = 0;
@@ -42,42 +44,6 @@ function checkStartupCookie() {
     }
 }
 
-// Function to simulate terminal command input and output
-function initializeTerminalInput(isMobile) {
-    const terminal = document.getElementById('terminal');
-    const terminalInput = document.getElementById('terminal-input');
-    const commandPrefix = document.querySelector('.command-prefix');
-
-    // Set the cursor to the end of the input field
-    terminalInput.focus();
-    const val = terminalInput.value;
-    terminalInput.value = '';
-    terminalInput.value = val;
-
-    if (isMobile) {
-        // If it's a mobile device, start the terminal with the startup sequence
-        terminalInput.disabled = true; // Disable the input during the startup sequence
-        executeStartupSequence(terminal, terminalInput);
-    } else if (!isMobile) {
-        terminalInput.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                const command = terminalInput.value.trim();
-                if (command === 'startup_Page();') {
-                    // Append the command only if it's not the startup command
-                    // Execute the startup sequence directly
-                    terminalInput.disabled = true; // Disable the input during the startup sequence
-                    executeStartupSequence(terminal, terminalInput);
-                } else if (command) {
-                    // For other commands, append them to the terminal window
-                    appendCommandToTerminal(terminal, commandPrefix.textContent, command);
-                    terminalInput.value = ''; // Clear the input field for the next command
-                }
-            }
-        });
-    }
-}
-
 // Function to set a cookie that the startup animation has been played
 function setStartupCookie() {
     const date = new Date();
@@ -86,12 +52,131 @@ function setStartupCookie() {
     document.cookie = "hasPlayedStartup=true;" + expires + ";path=/";
 }
 
-// Helper function to append commands to the terminal
-function appendCommandToTerminal(terminal, prefix, command) {
+// Helper function to move cursor to the end of the input field
+function moveCursorToEnd(inputElement) {
+    inputElement.focus();
+    const val = inputElement.value;
+    inputElement.value = '';
+    inputElement.value = val;
+}
+
+// Helper function to append commands and their output to the terminal
+function appendCommandToTerminal(terminal, prefix, command, terminalInput, commandHistory) {
+    // Append the command to the terminal
     const commandLine = document.createElement('div');
     commandLine.innerHTML = `<span class="command-prefix">${prefix}</span>${command}`;
-    terminal.appendChild(commandLine);
-    terminal.scrollTop = terminal.scrollHeight;
+    terminal.insertBefore(commandLine, terminalInput.parentNode);
+
+    // If the command is not defined in the commands object, display an error message
+    if (!(command in commands)) {
+        const errorMessage = document.createElement('div');
+        errorMessage.textContent = `Command '${command}' not found`;
+        terminal.insertBefore(errorMessage, terminalInput.parentNode);
+        return terminalInput; // Return the existing terminalInput if the command is not valid
+    }
+
+    // Append the command output to the terminal as a separate line
+    const commandOutput = document.createElement('div');
+    commandOutput.textContent = commands[command](terminal, terminalInput); // Get the actual command output
+    terminal.insertBefore(commandOutput, terminalInput.parentNode);
+
+    // Remove the existing input line
+    terminal.removeChild(terminalInput.parentNode);
+
+    // Create a new input line
+    const newCommandLine = document.createElement('div');
+    newCommandLine.className = 'command-line';
+    newCommandLine.innerHTML = `<span class="command-prefix">${prefix}</span><input type="text" id="terminal-input" autofocus spellcheck="false">`;
+    terminal.appendChild(newCommandLine);
+
+    // Update the terminalInput reference
+    terminalInput = document.getElementById('terminal-input');
+
+    // Move the cursor to the end of the new input field
+    moveCursorToEnd(terminalInput);
+
+    // Add 'Enter' key event listener to the new input field
+    addInputEventListener(terminalInput, terminal, prefix, commandHistory, commandHistory.length);
+
+    // Return the new terminalInput
+    return terminalInput;
+}
+
+// Function to add 'Enter' key event listener to an input field
+function addInputEventListener(terminalInput, terminal, commandPrefix, commandHistory, historyPosition) {
+    terminalInput.addEventListener('keydown', async (event) => { // Add async keyword here
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            const input = terminalInput.value.trim().split(' ');
+            const command = input[0];
+            const args = input.slice(1); // Get the arguments after the command
+            const prefix = commandPrefix.textContent; // Get the command prefix
+
+            if (command === 'startup_Page()') {
+                // If the command is the startup command, execute the startup sequence directly
+                terminalInput.disabled = true; // Disable the input during the startup sequence
+                executeStartupSequence(terminal, terminalInput);
+            } else if (command in commands) {
+                // If the command is defined in the commands object, execute it
+                const commandOutput = await commands[command](terminal, terminalInput, args); // Add await keyword here
+
+                // If the command is not 'clear', append the command and its output to the terminal
+                if (command !== 'clear') {
+                    const commandLine = document.createElement('div');
+                    commandLine.innerHTML = `<span class="command-prefix">${prefix}</span>${command}`;
+                    terminal.insertBefore(commandLine, terminalInput.parentNode);
+
+                    const commandOutputLine = document.createElement('div');
+                    commandOutputLine.innerHTML = commandOutput.replace(/\n/g, '<br>'); // Replace newline characters with <br> tags
+                    terminal.insertBefore(commandOutputLine, terminalInput.parentNode);
+
+                    terminalInput.value = ''; // Clear the input field for the next command
+                }
+            } else if (command) {
+                // For other commands, append them to the terminal window
+                terminalInput = appendCommandToTerminal(terminal, prefix, command, terminalInput, commandHistory);
+                terminalInput.value = ''; // Clear the input field for the next command
+
+                // Add command to history and reset position
+                commandHistory.push(command);
+                historyPosition = commandHistory.length;
+            }
+        } else if (event.key === 'ArrowUp') {
+            // Replace input with previous command in history
+            if (historyPosition > 0) {
+                historyPosition--;
+                terminalInput.value = commandHistory[historyPosition];
+                setTimeout(() => moveCursorToEnd(terminalInput), 0); // Move cursor to the end
+            }
+        } else if (event.key === 'ArrowDown') {
+            // Replace input with next command in history
+            if (historyPosition < commandHistory.length - 1) {
+                historyPosition++;
+                terminalInput.value = commandHistory[historyPosition];
+                setTimeout(() => moveCursorToEnd(terminalInput), 0); // Move cursor to the end
+            }
+        }
+    });
+}
+
+// Function to simulate terminal command input and output
+function initializeTerminalInput(isMobile) {
+    const terminal = document.getElementById('terminal');
+    const terminalInput = document.getElementById('terminal-input');
+    const commandPrefix = document.querySelector('.command-prefix');
+
+    // Initialize command history and position
+    const commandHistory = [];
+    let historyPosition = 0;
+
+    if (isMobile) {
+        // If it's a mobile device, start the terminal with the startup sequence
+        terminalInput.disabled = true; // Disable the input during the startup sequence
+        executeStartupSequence(terminal, terminalInput);
+    } else if (!isMobile) {
+        moveCursorToEnd(terminalInput); // Move cursor to the end of the input field
+        addInputEventListener(terminalInput, terminal, commandPrefix, commandHistory, historyPosition);
+    }
 }
 
 // Function to execute the startup sequence
@@ -164,7 +249,7 @@ document.addEventListener('DOMContentLoaded', () => {
     checkStartupCookie();
     const terminalContainer = document.getElementById('terminal-container');
     const windowControls = document.querySelector('.window-controls');
-    const isMobile = window.matchMedia("only screen and (max-width: 760px)").matches;
+    const isMobile = window.matchMedia("only screen and (max-width: 800px)").matches;
     if (!isMobile) {
         makeDraggable(terminalContainer, windowControls);
     }

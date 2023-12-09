@@ -14,19 +14,19 @@
         <div class="control close"></div>
         <div class="control minimize"></div>
         <div class="control maximize"></div>
-        <span class="terminal-title">user@kroedel.at — -zsh — click enter to start</span>
+        <span class="terminal-title">user@kroedel.at — -zsh<span class="desktop-only"> — click enter to start or type "help"</span></span>
     </div>
     <div id="terminal">
         <span id="last-login"></span> <!-- The 'Last login' message will be inserted here -->
         <div class="command-line">
             <span class="command-prefix">user@kroedel.at ~ % </span>
-            <input type="text" id="terminal-input" value="startup_Page();" autofocus spellcheck="false">
+            <input type="text" id="terminal-input" value="startup_Page()" autofocus spellcheck="false">
             <div class="resize-handle"></div>
         </div>
     </div>
 </div>
 
 <script src="node_modules/xterm/lib/xterm.js"></script>
-<script src="scripts/index.js"></script>
+<script src="scripts/index.js" type="module"></script>
 </body>
 </html>
