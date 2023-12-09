@@ -43,27 +43,39 @@ function checkStartupCookie() {
 }
 
 // Function to simulate terminal command input and output
-function initializeTerminalInput() {
+function initializeTerminalInput(isMobile) {
     const terminal = document.getElementById('terminal');
     const terminalInput = document.getElementById('terminal-input');
     const commandPrefix = document.querySelector('.command-prefix');
 
-    terminalInput.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            const command = terminalInput.value.trim();
-            if (command === 'startup_Page();') {
-                // Append the command only if it's not the startup command
-                // Execute the startup sequence directly
-                terminalInput.disabled = true; // Disable the input during the startup sequence
-                executeStartupSequence(terminal, terminalInput);
-            } else if (command) {
-                // For other commands, append them to the terminal window
-                appendCommandToTerminal(terminal, commandPrefix.textContent, command);
-                terminalInput.value = ''; // Clear the input field for the next command
+    // Set the cursor to the end of the input field
+    terminalInput.focus();
+    const val = terminalInput.value;
+    terminalInput.value = '';
+    terminalInput.value = val;
+
+    if (isMobile) {
+        // If it's a mobile device, start the terminal with the startup sequence
+        terminalInput.disabled = true; // Disable the input during the startup sequence
+        executeStartupSequence(terminal, terminalInput);
+    } else if (!isMobile) {
+        terminalInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                const command = terminalInput.value.trim();
+                if (command === 'startup_Page();') {
+                    // Append the command only if it's not the startup command
+                    // Execute the startup sequence directly
+                    terminalInput.disabled = true; // Disable the input during the startup sequence
+                    executeStartupSequence(terminal, terminalInput);
+                } else if (command) {
+                    // For other commands, append them to the terminal window
+                    appendCommandToTerminal(terminal, commandPrefix.textContent, command);
+                    terminalInput.value = ''; // Clear the input field for the next command
+                }
             }
-        }
-    });
+        });
+    }
 }
 
 // Function to set a cookie that the startup animation has been played
@@ -128,7 +140,7 @@ function fillProgressBar(terminal, terminalInput) {
 
         if (progress > totalProgress) {
             clearInterval(interval);
-            terminalInput.disabled = false; // Re-enable the input
+            terminalInput.disabled = true; // Keep the input disabled
             setTimeout(() => {
                 const doneElement = document.createElement('div');
                 doneElement.textContent = 'Done! - Redirecting...';
@@ -156,5 +168,5 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!isMobile) {
         makeDraggable(terminalContainer, windowControls);
     }
-    initializeTerminalInput();
+    initializeTerminalInput(isMobile);
 });
