@@ -15,10 +15,6 @@ body, html {
     transform: translate(-50%, -50%);
     width: 100%;
     height: 100%;
-    min-width: 500px;
-    max-width: 800px;
-    min-height: 300px;
-    max-height: 600px;
     background: #1e1e1e;
     border-radius: 8px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
@@ -27,6 +23,19 @@ body, html {
     display: flex;
     flex-direction: column;
     resize: both;
+}
+
+@media screen and (min-width: 800px) {
+    #terminal-container {
+        min-width: 500px;
+        max-width: 800px;
+        min-height: 300px;
+        max-height: 600px;
+    }
+
+    .window-controls:hover {
+        background: rgba(255, 255, 255, 0.1);
+    }
 }
 
 .window-controls {
@@ -61,10 +70,6 @@ body, html {
     font-size: 12px;
     margin-left: 8px;
     flex-grow: 1;
-}
-
-.window-controls:hover {
-    background: rgba(255, 255, 255, 0.1);
 }
 
 #terminal {
@@ -129,4 +134,22 @@ body, html {
 .command-prefix {
     color: #fff;
     margin-right: 4px; /* Adjust as needed to match your design */
+}
+
+/* Style for smaller screens (phones) */
+@media screen and (max-width: 800px) {
+    #terminal-container {
+        width: 90%;
+        height: 40%;
+        top: 30%;
+        left: 5%;
+        transform: none; /* Remove transform to position it correctly */
+        position: fixed; /* Or 'absolute' depending on your layout */
+    }
+
+    .window-controls {
+        cursor: default; /* Disable the dragging cursor */
+    }
+
+    /* Adjust any other elements as needed for mobile layout */
 }

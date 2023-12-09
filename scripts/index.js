@@ -152,6 +152,9 @@ document.addEventListener('DOMContentLoaded', () => {
     checkStartupCookie();
     const terminalContainer = document.getElementById('terminal-container');
     const windowControls = document.querySelector('.window-controls');
-    makeDraggable(terminalContainer, windowControls);
+    const isMobile = window.matchMedia("only screen and (max-width: 760px)").matches;
+    if (!isMobile) {
+        makeDraggable(terminalContainer, windowControls);
+    }
     initializeTerminalInput();
 });
