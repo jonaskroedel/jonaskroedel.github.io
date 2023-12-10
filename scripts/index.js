@@ -170,9 +170,9 @@ function initializeTerminalInput(isMobile) {
     let historyPosition = 0;
 
     if (isMobile) {
-        // If it's a mobile device, start the terminal with the startup sequence
-        terminalInput.disabled = true; // Disable the input during the startup sequence
-        executeStartupSequence(terminal, terminalInput);
+        // If it's a mobile device, load the main page directly
+        setStartupCookie(); // Set the cookie that the startup animation has been played
+        window.location.href = 'main.html'; // Redirect to the main page
     } else if (!isMobile) {
         moveCursorToEnd(terminalInput); // Move cursor to the end of the input field
         addInputEventListener(terminalInput, terminal, commandPrefix, commandHistory, historyPosition);
@@ -249,7 +249,7 @@ document.addEventListener('DOMContentLoaded', () => {
     checkStartupCookie();
     const terminalContainer = document.getElementById('terminal-container');
     const windowControls = document.querySelector('.window-controls');
-    const isMobile = window.matchMedia("only screen and (max-width: 800px)").matches;
+    const isMobile = window.matchMedia("only screen and (max-width: 550px)").matches;
     if (!isMobile) {
         makeDraggable(terminalContainer, windowControls);
     }
