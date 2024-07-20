@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organic 3D Audio Visualizer</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <div id="upload-container">
+        <h1>Organic 3D Audio Visualizer</h1>
+        <input type="file" id="audio-upload" accept="audio/*">
+    </div>
+    <div id="visualizer-container"></div>
+    <div id="audio-controls">
+        <button id="play-pause">▶</button>
+        <input type="range" id="progress-bar" min="0" max="100" value="0">
+        <span id="current-time">0:00</span> / <span id="duration">0:00</span>
+    </div>
+    <div id="sphere-controls">
+        <a href="../../main.html">
+            <button id="back">Back to main page</button>
+        </a><br
+        <label>Sensitivity: <input type="range" id="sensitivity" min="1" max="20" value="10"></label><br>
+        <label>Complexity: <input type="range" id="complexity" min="3" max="64" value="32"></label>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

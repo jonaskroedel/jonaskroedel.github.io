@@ -3,30 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MacOS Style Terminal</title>
-    <link rel="stylesheet" href="styles/macOS.css">
-    <!-- Include xterm.js CSS -->
-    <link rel="stylesheet" href="node_modules/xterm/css/xterm.css">
+    <title>macOS Terminal</title>
+    <link rel="stylesheet" href="styles/style.css">
 </head>
 <body>
-<div id="terminal-container">
-    <div class="window-controls">
-        <div class="control close"></div>
-        <div class="control minimize"></div>
-        <div class="control maximize"></div>
-        <span class="terminal-title">user@kroedel.at — -zsh<span class="desktop-only"> — click enter to start or type "help"</span></span>
-    </div>
-    <div id="terminal">
-        <span id="last-login"></span> <!-- The 'Last login' message will be inserted here -->
-        <div class="command-line">
-            <span class="command-prefix">user@kroedel.at ~ % </span>
-            <input type="text" id="terminal-input" value="startup_Page()" autofocus spellcheck="false">
-            <div class="resize-handle"></div>
+    <div id="desktop">
+        <div id="terminal" class="window">
+            <div class="titlebar">
+                <div class="buttons">
+                    <div class="close"></div>
+                    <div class="minimize"></div>
+                    <div class="zoom"></div>
+                </div>
+                <div class="title">jonaskrodel — -zsh — 80×24</div>
+            </div>
+            <div class="content">
+                <div id="output"></div>
+                <div id="input-line">
+                    <span class="prompt">user@kroedel.at ~ %</span>
+                    <input type="text" id="user-input" autofocus>
+                </div>
+            </div>
+            <div class="resize-handle bottom-right"></div>
         </div>
     </div>
-</div>
-
-<script src="node_modules/xterm/lib/xterm.js"></script>
-<script src="scripts/index.js" type="module"></script>
+    <script src="scripts/terminal.js"></script>
 </body>
 </html>

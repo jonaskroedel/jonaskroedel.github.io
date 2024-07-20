@@ -4,13 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome</title>
-    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="styles/main.css">
 </head>
 <body>
-<div id="welcome-container" class="hidden">
+<div id="welcome-container">
     <h1 id="welcome-title">Hello Human!</h1>
-    <button id="button-one">Button One</button>
-    <button id="button-two">Button Two</button>
+    <div id="button-container">
+        <a href="projects/audioVisualizer/index.html" id="audio-visualizer">
+            <button id="button-one">Audio Visualizer</button>
+        </a>
+        <button id="button-two">Button Two</button>
+    </div>
 </div>
 <!-- Cookie Consent Banner -->
 <div id="cookie-consent-banner" class="cookie-banner">
@@ -19,6 +23,11 @@
     <button id="cookie-consent-no">No, thanks</button>
 </div>
 
-<script src="scripts/script.js" type="module"></script>
+<!-- Impressum Button -->
+<a href="impress.html" id="impress">
+    <button id="button-impress">Impressum</button>
+</a>
+
+<script src="scripts/main.js" type="module"></script>
 </body>
 </html>

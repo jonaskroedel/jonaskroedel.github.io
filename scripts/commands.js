@@ -1,29 +1,25 @@
 const commands = {
-    ping: function() {
-        // Return "Pong!" when the ping command is entered
-        return "Pong!";
-    },
-    clear: function(terminal, terminalInput) {
-        // Get all the child nodes of the terminal
-        const terminalLines = Array.from(terminal.childNodes);
-
-        // Remove all child nodes of the terminal except for the current command line
-        for (const line of terminalLines) {
-            if (line !== terminalInput.parentNode) {
-                terminal.removeChild(line);
+    ping: () => "Pong!",
+    clear: (terminal, terminalInput) => {
+        Array.from(terminal.childNodes).forEach(node => {
+            if (node !== terminalInput.parentNode) {
+                terminal.removeChild(node);
             }
-        }
+        });
+        return '';
     },
-    help: function() {
-        // Return the help message when the help command is entered
-        return "Available commands:\n" +
-            "help - Display this message\n" +
-            "clear - Clear the terminal window\n" +
-            "ping - Pong!\n" +
-            "startup_Page() - Enter the main page";
-    },
-
-    // Add more commands here...
+    help: () => `Available commands:
+help - Display this message
+clear - Clear the terminal window
+ping - Pong!
+startup_Page() - Enter the main page
+date - Display current date and time
+echo [text] - Display the provided text
+whoami - Display current user information`,
+    date: () => new Date().toString(),
+    echo: (_, __, args) => args.join(' '),
+    whoami: () => "user@kroedel.at",
+    startup_Page: () => "Initializing startup sequence...",
 };
 
 export default commands;
